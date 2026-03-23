@@ -1,2 +1,6 @@
 appsettings.json
 .vs/
+bin/
+obj/
+.vs/
+*.user
