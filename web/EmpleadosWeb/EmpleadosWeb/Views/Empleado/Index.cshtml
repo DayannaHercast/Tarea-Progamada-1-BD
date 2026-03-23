@@ -1,0 +1,49 @@
+﻿@model List<Empleado>
+@{
+    ViewData["Title"] = "Empleados";
+}
+
+<h2>Lista de Empleados</h2>
+
+<table style="width:100%; border-collapse:collapse;" border="1">
+    <thead>
+        <tr>
+            <th style="padding:8px;">ID</th>
+            <th style="padding:8px;">nombre</th>
+            <th style="padding:8px;">salario</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var emp in Model)
+        {
+            <tr>
+                <td style="padding:8px;">@emp.Id</td>
+                <td style="padding:8px;">@emp.nombre</td>
+                <td style="padding:8px;">@emp.salario</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Agregar empleado</h3>
+
+<form asp-action="Insertar" method="post">
+    <div>
+        <label>nombre:</label><br />
+        <input type="text" name="nombre" required />
+    </div>
+
+    <div>
+        <label>salario:</label><br />
+        <input type="number" name="salario" required />
+    </div>
+
+    <br />
+    <button type="submit">Guardar</button>
+</form>
+@if (TempData["Mensaje"] != null)
+{
+    <script>
+        alert("@TempData["Mensaje"]");
+    </script>
+}
