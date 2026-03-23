@@ -32,8 +32,8 @@ public class EmpleadoController : Controller
                 empleados.Add(new Empleado
                 {
                     Id = (int)reader["Id"],
-                    Nombre = reader["Nombre"].ToString(),
-                    Salario = (decimal)reader["Salario"]
+                    nombre = reader["nombre"].ToString(),
+                    salario = (decimal)reader["salario"]
                 });
             }
         }
@@ -43,7 +43,7 @@ public class EmpleadoController : Controller
 
     // INSERTAR EMPLEADO
     [HttpPost]
-    public IActionResult Insertar(string Nombre, decimal Salario)
+    public IActionResult Insertar(string nombre, decimal salario)
     {
         string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
@@ -53,8 +53,8 @@ public class EmpleadoController : Controller
             cmd.CommandType = CommandType.StoredProcedure;
 
             // Parámetros de entrada
-            cmd.Parameters.AddWithValue("@inNombre", Nombre);
-            cmd.Parameters.AddWithValue("@inSalario", Salario);
+            cmd.Parameters.AddWithValue("@innombre", nombre);
+            cmd.Parameters.AddWithValue("@insalario", salario);
 
             // Parámetro de salida
             SqlParameter resultado = new SqlParameter("@outResultado", SqlDbType.Int);
@@ -67,13 +67,13 @@ public class EmpleadoController : Controller
             int valorResultado = (int)resultado.Value;
 
             // Mensaje según el resultado de la inserción
-            if (valorResultado == 0)
+            if (valorResultado == -1)
             {
-                ViewBag.Mensaje = "El empleado ya existe.";
+                TempData["Mensaje"] = "El empleado ya existe.";
             }
             else
             {
-                ViewBag.Mensaje = "Empleado insertado correctamente.";
+                TempData["Mensaje"] = "Empleado insertado correctamente.";
             }
         }
 

@@ -3,7 +3,7 @@
     public class Empleado
     {
         public int Id { get; set; }
-        public string Nombre { get; set; }
-        public decimal Salario { get; set; }
+        public string nombre { get; set; }
+        public decimal salario { get; set; }
     }
 }
