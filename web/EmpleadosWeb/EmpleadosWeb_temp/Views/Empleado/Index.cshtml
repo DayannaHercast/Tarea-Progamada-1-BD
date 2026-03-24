@@ -1,39 +1,46 @@
 ﻿@model List<Empleado>
+
 @{
+    // Título de la página mostrado en el layout
     ViewData["Title"] = "Empleados";
 }
 
 <div class="container mt-5">
 
-    <div class="d-flex justify-content-center  mb-4">
+    <div class="d-flex justify-content-center mb-4">
         <h2>Lista de Empleados</h2>
     </div>
 
+
     <div class="card shadow-lg p-4">
 
+        <!-- Tabla de empleados -->
         <table class="table table-striped table-hover text-center align-middle">
 
+            <!-- Encabezados -->
             <thead class="table-dark">
                 <tr>
-                    <th>ID</th>
+                    <th>id</th>
                     <th>Nombre</th>
                     <th>Salario</th>
                 </tr>
             </thead>
 
+            <!-- Datos dinámicos -->
             <tbody>
-                @foreach (var emp in Model)
+                @foreach (var empleado in Model)
                 {
                     <tr>
-                        <td>@emp.Id</td>
-                        <td>@emp.nombre</td>
-                        <td>@emp.salario</td>
+                        <td>@empleado.id</td>
+                        <td>@empleado.nombre</td>
+                        <td>@empleado.salario</td>
                     </tr>
                 }
             </tbody>
 
         </table>
 
+        <!-- Botón para ir a la página de inserción -->
         <div class="text-center mt-3">
             <a asp-action="Insertar" class="btn btn-primary btn-lg">
                 Insertar Empleado
@@ -43,9 +50,11 @@
     </div>
 
 </div>
+
+<!-- Mensaje de alerta si existe -->
 @if (TempData["Mensaje"] != null)
 {
     <script>
-        alert("@TempData["Mensaje"]");
+        alert('@TempData["Mensaje"]');
     </script>
 }

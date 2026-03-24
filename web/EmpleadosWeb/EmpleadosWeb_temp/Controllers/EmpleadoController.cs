@@ -8,6 +8,7 @@ public class EmpleadoController : Controller
 {
     private readonly IConfiguration _configuration;
 
+    // Constructor para inyección de configuración
     public EmpleadoController(IConfiguration configuration)
     {
         _configuration = configuration;
@@ -16,49 +17,58 @@ public class EmpleadoController : Controller
     // LISTAR EMPLEADOS
     public IActionResult Index()
     {
+        // Lista donde se almacenan los empleados
         List<Empleado> empleados = new List<Empleado>();
+
+        // Obtener cadena de conexión
         string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
         using (SqlConnection conn = new SqlConnection(connectionString))
         {
+            // Configuración del procedimiento almacenado
             SqlCommand cmd = new SqlCommand("listarEmpleados", conn);
             cmd.CommandType = CommandType.StoredProcedure;
 
             conn.Open();
+
+            // Ejecución del lector de datos
             SqlDataReader reader = cmd.ExecuteReader();
 
+            // Recorrer resultados
             while (reader.Read())
             {
                 empleados.Add(new Empleado
                 {
-                    Id = (int)reader["Id"],
+                    id = (int)reader["id"],
                     nombre = reader["nombre"].ToString(),
                     salario = (decimal)reader["salario"]
                 });
             }
         }
 
+        // Retornar vista con la lista
         return View(empleados);
     }
 
     // INSERTAR EMPLEADO
-    // MOSTRAR FORMULARIO
     [HttpGet]
     public IActionResult Insertar()
     {
         return View();
     }
+
+    // Procesar inserción
     [HttpPost]
     public IActionResult Insertar(string nombre, decimal salario)
     {
-        //Validación básica
+        // Validación: nombre vacío
         if (string.IsNullOrWhiteSpace(nombre))
         {
             TempData["Mensaje"] = "El nombre no puede estar vacio.";
             return RedirectToAction("Insertar");
         }
 
-        //Solo letras, espacios y guion
+        // Validación: solo letras, espacios y guion
         foreach (char c in nombre)
         {
             if (!char.IsLetter(c) && c != ' ' && c != '-')
@@ -68,32 +78,39 @@ public class EmpleadoController : Controller
             }
         }
 
+        // Validación: salario positivo
         if (salario <= 0)
         {
             TempData["Mensaje"] = "El salario debe ser mayor a 0.";
             return RedirectToAction("Insertar");
         }
 
-        //Llamada al SP
+        // Cadena de conexión
         string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
         using (SqlConnection conn = new SqlConnection(connectionString))
         {
+            // Configuración del procedimiento almacenado
             SqlCommand cmd = new SqlCommand("insertarEmpleado", conn);
             cmd.CommandType = CommandType.StoredProcedure;
 
+            // Parámetros de entrada
             cmd.Parameters.AddWithValue("@innombre", nombre);
             cmd.Parameters.AddWithValue("@insalario", salario);
 
+            // Parámetro de salida
             SqlParameter resultado = new SqlParameter("@outResultado", SqlDbType.Int);
             resultado.Direction = ParameterDirection.Output;
             cmd.Parameters.Add(resultado);
 
             conn.Open();
+
+            // Ejecutar procedimiento
             cmd.ExecuteNonQuery();
 
             int valorResultado = (int)resultado.Value;
 
+            // Validar resultado del SP
             if (valorResultado == -1)
             {
                 TempData["Mensaje"] = "El empleado ya existe.";
@@ -101,6 +118,7 @@ public class EmpleadoController : Controller
             }
         }
 
+        // Mensaje de éxito
         TempData["Mensaje"] = "Empleado insertado correctamente.";
         return RedirectToAction("Index");
     }

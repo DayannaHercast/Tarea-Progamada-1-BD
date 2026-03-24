@@ -1,9 +1,14 @@
 ﻿namespace EmpleadosWeb.Models
 {
+    // Modelo que representa la entidad Empleado
     public class Empleado
     {
-        public int Id { get; set; }
+        // identificador único del empleado
+        public int id { get; set; }
+        // Nombre del empleado
         public string nombre { get; set; }
+
+        // Salario del empleado
         public decimal salario { get; set; }
     }
 }

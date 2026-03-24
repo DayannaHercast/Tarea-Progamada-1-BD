@@ -486,7 +486,7 @@ jQuery.extend( {
 		return flat( ret );
 	},
 
-	// A global GUID counter for objects
+	// A global GUid counter for objects
 	guid: 1,
 
 	// jQuery.support is not used in Core but other projects attach their
@@ -641,7 +641,7 @@ var i,
 	ridentifier = new RegExp( "^" + identifier + "$" ),
 
 	matchExpr = {
-		"ID": new RegExp( "^#(" + identifier + ")" ),
+		"id": new RegExp( "^#(" + identifier + ")" ),
 		"CLASS": new RegExp( "^\\.(" + identifier + ")" ),
 		"TAG": new RegExp( "^(" + identifier + "|[*])" ),
 		"ATTR": new RegExp( "^" + attributes ),
@@ -664,7 +664,7 @@ var i,
 
 	rnative = /^[^{]+\{\s*\[native \w/,
 
-	// Easily-parseable/retrievable ID or TAG or CLASS selectors
+	// Easily-parseable/retrievable id or TAG or CLASS selectors
 	rquickExpr = /^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,
 
 	rsibling = /[+~]/,
@@ -783,16 +783,16 @@ function Sizzle( selector, context, results, seed ) {
 			// (excepting DocumentFragment context, where the methods don't exist)
 			if ( nodeType !== 11 && ( match = rquickExpr.exec( selector ) ) ) {
 
-				// ID selector
+				// id selector
 				if ( ( m = match[ 1 ] ) ) {
 
 					// Document context
 					if ( nodeType === 9 ) {
-						if ( ( elem = context.getElementById( m ) ) ) {
+						if ( ( elem = context.getElementByid( m ) ) ) {
 
 							// Support: IE, Opera, Webkit
 							// TODO: identify versions
-							// getElementById can match elements by name instead of ID
+							// getElementByid can match elements by name instead of id
 							if ( elem.id === m ) {
 								results.push( elem );
 								return results;
@@ -806,8 +806,8 @@ function Sizzle( selector, context, results, seed ) {
 
 						// Support: IE, Opera, Webkit
 						// TODO: identify versions
-						// getElementById can match elements by name instead of ID
-						if ( newContext && ( elem = newContext.getElementById( m ) ) &&
+						// getElementByid can match elements by name instead of id
+						if ( newContext && ( elem = newContext.getElementByid( m ) ) &&
 							contains( context, elem ) &&
 							elem.id === m ) {
 
@@ -845,7 +845,7 @@ function Sizzle( selector, context, results, seed ) {
 				// qSA considers elements outside a scoping root when evaluating child or
 				// descendant combinators, which is not what we want.
 				// In such cases, we work around the behavior by prefixing every selector in the
-				// list with an ID selector referencing the scope context.
+				// list with an id selector referencing the scope context.
 				// The technique has to be used as well when a leading combinator is used
 				// as such selectors are not recognized by querySelectorAll.
 				// Thanks to Andrew Dupont for this technique.
@@ -856,11 +856,11 @@ function Sizzle( selector, context, results, seed ) {
 					newContext = rsibling.test( selector ) && testContext( context.parentNode ) ||
 						context;
 
-					// We can use :scope instead of the ID hack if the browser
+					// We can use :scope instead of the id hack if the browser
 					// supports it & if we're not changing the context.
 					if ( newContext !== context || !support.scope ) {
 
-						// Capture the context ID, setting it first if necessary
+						// Capture the context id, setting it first if necessary
 						if ( ( nid = context.getAttribute( "id" ) ) ) {
 							nid = nid.replace( rcssescape, fcssescape );
 						} else {
@@ -1198,44 +1198,44 @@ setDocument = Sizzle.setDocument = function( node ) {
 	support.getElementsByClassName = rnative.test( document.getElementsByClassName );
 
 	// Support: IE<10
-	// Check if getElementById returns elements by name
-	// The broken getElementById methods don't pick up programmatically-set names,
+	// Check if getElementByid returns elements by name
+	// The broken getElementByid methods don't pick up programmatically-set names,
 	// so use a roundabout getElementsByName test
-	support.getById = assert( function( el ) {
+	support.getByid = assert( function( el ) {
 		docElem.appendChild( el ).id = expando;
 		return !document.getElementsByName || !document.getElementsByName( expando ).length;
 	} );
 
-	// ID filter and find
-	if ( support.getById ) {
-		Expr.filter[ "ID" ] = function( id ) {
-			var attrId = id.replace( runescape, funescape );
+	// id filter and find
+	if ( support.getByid ) {
+		Expr.filter[ "id" ] = function( id ) {
+			var attrid = id.replace( runescape, funescape );
 			return function( elem ) {
-				return elem.getAttribute( "id" ) === attrId;
+				return elem.getAttribute( "id" ) === attrid;
 			};
 		};
-		Expr.find[ "ID" ] = function( id, context ) {
-			if ( typeof context.getElementById !== "undefined" && documentIsHTML ) {
-				var elem = context.getElementById( id );
+		Expr.find[ "id" ] = function( id, context ) {
+			if ( typeof context.getElementByid !== "undefined" && documentIsHTML ) {
+				var elem = context.getElementByid( id );
 				return elem ? [ elem ] : [];
 			}
 		};
 	} else {
-		Expr.filter[ "ID" ] =  function( id ) {
-			var attrId = id.replace( runescape, funescape );
+		Expr.filter[ "id" ] =  function( id ) {
+			var attrid = id.replace( runescape, funescape );
 			return function( elem ) {
 				var node = typeof elem.getAttributeNode !== "undefined" &&
 					elem.getAttributeNode( "id" );
-				return node && node.value === attrId;
+				return node && node.value === attrid;
 			};
 		};
 
 		// Support: IE 6 - 7 only
-		// getElementById is not reliable as a find shortcut
-		Expr.find[ "ID" ] = function( id, context ) {
-			if ( typeof context.getElementById !== "undefined" && documentIsHTML ) {
+		// getElementByid is not reliable as a find shortcut
+		Expr.find[ "id" ] = function( id, context ) {
+			if ( typeof context.getElementByid !== "undefined" && documentIsHTML ) {
 				var node, i, elems,
-					elem = context.getElementById( id );
+					elem = context.getElementByid( id );
 
 				if ( elem ) {
 
@@ -1967,8 +1967,8 @@ Expr = Sizzle.selectors = {
 
 							// Support: IE <9 only
 							// Defend against cloned attroperties (jQuery gh-1709)
-							uniqueCache = outerCache[ node.uniqueID ] ||
-								( outerCache[ node.uniqueID ] = {} );
+							uniqueCache = outerCache[ node.uniqueid ] ||
+								( outerCache[ node.uniqueid ] = {} );
 
 							cache = uniqueCache[ type ] || [];
 							nodeIndex = cache[ 0 ] === dirruns && cache[ 1 ];
@@ -1998,8 +1998,8 @@ Expr = Sizzle.selectors = {
 
 								// Support: IE <9 only
 								// Defend against cloned attroperties (jQuery gh-1709)
-								uniqueCache = outerCache[ node.uniqueID ] ||
-									( outerCache[ node.uniqueID ] = {} );
+								uniqueCache = outerCache[ node.uniqueid ] ||
+									( outerCache[ node.uniqueid ] = {} );
 
 								cache = uniqueCache[ type ] || [];
 								nodeIndex = cache[ 0 ] === dirruns && cache[ 1 ];
@@ -2026,8 +2026,8 @@ Expr = Sizzle.selectors = {
 
 											// Support: IE <9 only
 											// Defend against cloned attroperties (jQuery gh-1709)
-											uniqueCache = outerCache[ node.uniqueID ] ||
-												( outerCache[ node.uniqueID ] = {} );
+											uniqueCache = outerCache[ node.uniqueid ] ||
+												( outerCache[ node.uniqueid ] = {} );
 
 											uniqueCache[ type ] = [ dirruns, diff ];
 										}
@@ -2434,8 +2434,8 @@ function addCombinator( matcher, combinator, base ) {
 
 						// Support: IE <9 only
 						// Defend against cloned attroperties (jQuery gh-1709)
-						uniqueCache = outerCache[ elem.uniqueID ] ||
-							( outerCache[ elem.uniqueID ] = {} );
+						uniqueCache = outerCache[ elem.uniqueid ] ||
+							( outerCache[ elem.uniqueid ] = {} );
 
 						if ( skip && skip === elem.nodeName.toLowerCase() ) {
 							elem = elem[ dir ] || elem;
@@ -2847,12 +2847,12 @@ select = Sizzle.select = function( selector, context, results, seed ) {
 	// (the latter of which guarantees us context)
 	if ( match.length === 1 ) {
 
-		// Reduce context if the leading compound selector is an ID
+		// Reduce context if the leading compound selector is an id
 		tokens = match[ 0 ] = match[ 0 ].slice( 0 );
-		if ( tokens.length > 2 && ( token = tokens[ 0 ] ).type === "ID" &&
+		if ( tokens.length > 2 && ( token = tokens[ 0 ] ).type === "id" &&
 			context.nodeType === 9 && documentIsHTML && Expr.relative[ tokens[ 1 ].type ] ) {
 
-			context = ( Expr.find[ "ID" ]( token.matches[ 0 ]
+			context = ( Expr.find[ "id" ]( token.matches[ 0 ]
 				.replace( runescape, funescape ), context ) || [] )[ 0 ];
 			if ( !context ) {
 				return results;
@@ -3193,7 +3193,7 @@ var rootjQuery,
 
 				// HANDLE: $(#id)
 				} else {
-					elem = document.getElementById( match[ 2 ] );
+					elem = document.getElementByid( match[ 2 ] );
 
 					if ( elem ) {
 
@@ -3649,7 +3649,7 @@ jQuery.Callbacks = function( options ) {
 };
 
 
-function Identity( v ) {
+function identity( v ) {
 	return v;
 }
 function Thrower( ex ) {
@@ -3791,7 +3791,7 @@ jQuery.extend( {
 										if ( special ) {
 											then.call(
 												returned,
-												resolve( maxDepth, deferred, Identity, special ),
+												resolve( maxDepth, deferred, identity, special ),
 												resolve( maxDepth, deferred, Thrower, special )
 											);
 
@@ -3803,9 +3803,9 @@ jQuery.extend( {
 
 											then.call(
 												returned,
-												resolve( maxDepth, deferred, Identity, special ),
+												resolve( maxDepth, deferred, identity, special ),
 												resolve( maxDepth, deferred, Thrower, special ),
-												resolve( maxDepth, deferred, Identity,
+												resolve( maxDepth, deferred, identity,
 													deferred.notifyWith )
 											);
 										}
@@ -3815,7 +3815,7 @@ jQuery.extend( {
 
 										// Only substitute handlers pass on context
 										// and multiple values (non-spec behavior)
-										if ( handler !== Identity ) {
+										if ( handler !== identity ) {
 											that = undefined;
 											args = [ returned ];
 										}
@@ -3883,7 +3883,7 @@ jQuery.extend( {
 								newDefer,
 								isFunction( onProgress ) ?
 									onProgress :
-									Identity,
+									identity,
 								newDefer.notifyWith
 							)
 						);
@@ -3895,7 +3895,7 @@ jQuery.extend( {
 								newDefer,
 								isFunction( onFulfilled ) ?
 									onFulfilled :
-									Identity
+									identity
 							)
 						);
 
@@ -4400,7 +4400,7 @@ var dataUser = new Data();
 //	6. Provide a clear path for implementation upgrade to WeakMap in 2014
 
 var rbrace = /^(?:\{[\w\W]*\}|\[[\w\W]*\])$/,
-	rmultiDash = /[A-Z]/g;
+	rmultidash = /[A-Z]/g;
 
 function getData( data ) {
 	if ( data === "true" ) {
@@ -4433,7 +4433,7 @@ function dataAttr( elem, key, data ) {
 	// If nothing was found internally, try to fetch any
 	// data from the HTML5 data-* attribute
 	if ( data === undefined && elem.nodeType === 1 ) {
-		name = "data-" + key.replace( rmultiDash, "-$&" ).toLowerCase();
+		name = "data-" + key.replace( rmultidash, "-$&" ).toLowerCase();
 		data = elem.getAttribute( name );
 
 		if ( typeof data === "string" ) {
@@ -5216,7 +5216,7 @@ jQuery.event = {
 			jQuery.find.matchesSelector( documentElement, selector );
 		}
 
-		// Make sure that the handler has a unique ID, used to find/remove it later
+		// Make sure that the handler has a unique id, used to find/remove it later
 		if ( !handler.guid ) {
 			handler.guid = jQuery.guid++;
 		}
@@ -5821,7 +5821,7 @@ jQuery.each( {
 	clientY: true,
 	offsetX: true,
 	offsetY: true,
-	pointerId: true,
+	pointerid: true,
 	pointerType: true,
 	screenX: true,
 	screenY: true,
@@ -7398,7 +7398,7 @@ function defaultPrefilter( elem, props, opts ) {
 		// the overflowX value there.
 		opts.overflow = [ style.overflow, style.overflowX, style.overflowY ];
 
-		// Identify a display type, preferring old show/hide data over the CSS cascade
+		// identify a display type, preferring old show/hide data over the CSS cascade
 		restoreDisplay = dataShow && dataShow.display;
 		if ( restoreDisplay == null ) {
 			restoreDisplay = dataPriv.get( elem, "display" );

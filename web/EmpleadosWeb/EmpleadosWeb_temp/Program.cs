@@ -1,27 +1,37 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configuración de servicios (MVC)
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configuración del pipeline HTTP
 if (!app.Environment.IsDevelopment())
 {
+    // Manejo de errores en producción
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+
+    // Seguridad HTTP Strict Transport Security
     app.UseHsts();
 }
 
+// Redirección a HTTPS
 app.UseHttpsRedirection();
+
+// Archivos estáticos (css, js, imágenes)
 app.UseStaticFiles();
 
+// Habilitar enrutamiento
 app.UseRouting();
 
+// Autorización (no se usa autenticación en este proyecto)
 app.UseAuthorization();
 
+// Ruta principal del sistema
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Empleado}/{action=Index}/{id?}");
+    pattern: "{controller=Empleado}/{action=Index}/{id?}"
+);
 
+// Ejecutar la aplicación
 app.Run();
