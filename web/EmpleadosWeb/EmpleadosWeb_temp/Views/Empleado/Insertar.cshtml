@@ -1,0 +1,44 @@
+﻿@model EmpleadosWeb.Models.Empleado
+
+<div class="container  custom-margin">
+    <div class="card w-50 mx-auto shadow-lg p-4">
+        
+        <h2 class="text-center mb-4">Insertar Empleado</h2>
+
+        <form asp-action="Insertar" method="post">
+
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input asp-for="nombre" class="form-control" placeholder="Ingrese el nombre" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Salario</label>
+                <input asp-for="salario" type="number" class="form-control" placeholder="Ingrese el salario" />
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-6">
+                    <button type="submit" class="btn btn-primary w-100">
+                        Insertar
+                    </button>
+                </div>
+
+                <div class="col-6">
+                    <a href="/Empleado/Index" class="btn btn-secondary w-100">
+                        Regresar
+                    </a>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@if (TempData["Mensaje"] != null)
+{
+    <script>
+        alert("@TempData["Mensaje"]");
+    </script>
+}

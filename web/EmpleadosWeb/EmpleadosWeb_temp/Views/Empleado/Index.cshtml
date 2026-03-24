@@ -3,44 +3,46 @@
     ViewData["Title"] = "Empleados";
 }
 
-<h2>Lista de Empleados</h2>
+<div class="container mt-5">
 
-<table style="width:100%; border-collapse:collapse;" border="1">
-    <thead>
-        <tr>
-            <th style="padding:8px;">ID</th>
-            <th style="padding:8px;">nombre</th>
-            <th style="padding:8px;">salario</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var emp in Model)
-        {
-            <tr>
-                <td style="padding:8px;">@emp.Id</td>
-                <td style="padding:8px;">@emp.nombre</td>
-                <td style="padding:8px;">@emp.salario</td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<h3>Agregar empleado</h3>
-
-<form asp-action="Insertar" method="post">
-    <div>
-        <label>nombre:</label><br />
-        <input type="text" name="nombre" required />
+    <div class="d-flex justify-content-center  mb-4">
+        <h2>Lista de Empleados</h2>
     </div>
 
-    <div>
-        <label>salario:</label><br />
-        <input type="number" name="salario" required />
+    <div class="card shadow-lg p-4">
+
+        <table class="table table-striped table-hover text-center align-middle">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Salario</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var emp in Model)
+                {
+                    <tr>
+                        <td>@emp.Id</td>
+                        <td>@emp.nombre</td>
+                        <td>@emp.salario</td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+
+        <div class="text-center mt-3">
+            <a asp-action="Insertar" class="btn btn-primary btn-lg">
+                Insertar Empleado
+            </a>
+        </div>
+
     </div>
 
-    <br />
-    <button type="submit">Guardar</button>
-</form>
+</div>
 @if (TempData["Mensaje"] != null)
 {
     <script>

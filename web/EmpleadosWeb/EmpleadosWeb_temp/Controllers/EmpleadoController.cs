@@ -42,9 +42,39 @@ public class EmpleadoController : Controller
     }
 
     // INSERTAR EMPLEADO
+    // MOSTRAR FORMULARIO
+    [HttpGet]
+    public IActionResult Insertar()
+    {
+        return View();
+    }
     [HttpPost]
     public IActionResult Insertar(string nombre, decimal salario)
     {
+        //Validación básica
+        if (string.IsNullOrWhiteSpace(nombre))
+        {
+            TempData["Mensaje"] = "El nombre no puede estar vacio.";
+            return RedirectToAction("Insertar");
+        }
+
+        //Solo letras, espacios y guion
+        foreach (char c in nombre)
+        {
+            if (!char.IsLetter(c) && c != ' ' && c != '-')
+            {
+                TempData["Mensaje"] = "El nombre solo puede contener letras y guion.";
+                return RedirectToAction("Insertar");
+            }
+        }
+
+        if (salario <= 0)
+        {
+            TempData["Mensaje"] = "El salario debe ser mayor a 0.";
+            return RedirectToAction("Insertar");
+        }
+
+        //Llamada al SP
         string connectionString = _configuration.GetConnectionString("DefaultConnection");
 
         using (SqlConnection conn = new SqlConnection(connectionString))
@@ -52,11 +82,9 @@ public class EmpleadoController : Controller
             SqlCommand cmd = new SqlCommand("insertarEmpleado", conn);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            // Parámetros de entrada
             cmd.Parameters.AddWithValue("@innombre", nombre);
             cmd.Parameters.AddWithValue("@insalario", salario);
 
-            // Parámetro de salida
             SqlParameter resultado = new SqlParameter("@outResultado", SqlDbType.Int);
             resultado.Direction = ParameterDirection.Output;
             cmd.Parameters.Add(resultado);
@@ -66,17 +94,14 @@ public class EmpleadoController : Controller
 
             int valorResultado = (int)resultado.Value;
 
-            // Mensaje según el resultado de la inserción
             if (valorResultado == -1)
             {
                 TempData["Mensaje"] = "El empleado ya existe.";
-            }
-            else
-            {
-                TempData["Mensaje"] = "Empleado insertado correctamente.";
+                return RedirectToAction("Insertar");
             }
         }
 
+        TempData["Mensaje"] = "Empleado insertado correctamente.";
         return RedirectToAction("Index");
     }
 }
